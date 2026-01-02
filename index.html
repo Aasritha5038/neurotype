@@ -87,39 +87,28 @@ footer{text-align:center;opacity:.7;margin-top:10px;}
 <button onclick="downloadPDF()">Download Professional Certificate</button>
 </div>
 
-<div class="container">
-<h2>Certificate Verification 🔍</h2>
-<input id="verifyID" placeholder="Enter Certificate ID">
-<button onclick="verifyCertificate()">Verify</button>
-<div id="verifyResult" style="margin-top:15px;font-size:16px;"></div>
-</div>
-
 <footer>© 2026 NeuroType Cognitive Systems</footer>
 
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
 <script>
-  // 🔹 Firebase Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCrnR3QCl9LGqF2Kg5Gwonq549bBhd5jEU",
-    authDomain: "neurotype-548f1.firebaseapp.com",
-    projectId: "neurotype-548f1",
-    storageBucket: "neurotype-548f1.appspot.com",
-    messagingSenderId: "1082425793782",
-    appId: "1:1082425793782:web:3fb0aff5ed6570920520d7",
-    measurementId: "G-0Q95G6CKVF"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCrnR3QCl9LGqF2Kg5Gwonq549bBhd5jEU",
+  authDomain: "neurotype-548f1.firebaseapp.com",
+  projectId: "neurotype-548f1",
+  storageBucket: "neurotype-548f1.appspot.com",
+  messagingSenderId: "1082425793782",
+  appId: "1:1082425793782:web:3fb0aff5ed6570920520d7"
+};
 
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 </script>
 
 <script>
-// -------- PARAGRAPHS (Elaborated ~5 lines each) --------
+// -------- PARAGRAPHS --------
 const paragraphs=[
 `Typing is not merely a mechanical activity but a complex interaction between cognitive processing, motor coordination, and focused attention. When an individual types continuously under a timed environment, the brain must coordinate thoughts, language formulation, and precise hand movements simultaneously. This strengthens neural pathways responsible for concentration, memory retention, and decision-making. Extended typing challenges improve mental stamina and sharpen problem-solving skills. Continuous practice can lead to better multitasking and faster cognitive responses in real-life tasks.`,
 
@@ -165,7 +154,7 @@ function generateCertID(){
  return "NT-"+new Date().getFullYear()+"-"+Math.floor(100000+Math.random()*900000);
 }
 
-// -------- FINISH TEST & SAVE CERTIFICATE --------
+// -------- FINISH --------
 async function finish(){
  clearInterval(timer);
  typing.disabled=true;
@@ -197,18 +186,12 @@ async function finish(){
 
  document.getElementById("cert").style.display="block";
 
- // -------- SAVE TO FIRESTORE --------
- try {
-     await db.collection("certificates").add({
-         certID: certID,
-         name: nameInput,
-         brain: brain,
-         issuedOn: firebase.firestore.FieldValue.serverTimestamp()
-     });
- } catch(err){
-     console.error("Error saving certificate:", err);
-     alert("Failed to save certificate. Check Firebase configuration or Firestore rules.");
- }
+ await db.collection("certificates").add({
+   certID: certID,
+   name: nameInput,
+   brain: brain,
+   issuedOn: firebase.firestore.FieldValue.serverTimestamp()
+ });
 }
 
 // -------- PDF CERTIFICATE --------
@@ -216,62 +199,18 @@ function downloadPDF(){
  const {jsPDF}=window.jspdf;
  const doc=new jsPDF("landscape","px",[800,600]);
 
- doc.setFillColor(245,247,255);
- doc.rect(0,0,800,600,"F");
-
- doc.setDrawColor(30,60,114);
- doc.setLineWidth(6);
- doc.rect(20,20,760,560);
-
- doc.setTextColor(30,60,114);
- doc.setFontSize(32);
- doc.text("CERTIFICATE OF COGNITIVE TYPING",400,100,{align:"center"});
+ doc.setFontSize(30);
+ doc.text("CERTIFICATE OF COGNITIVE TYPING",400,120,{align:"center"});
 
  const name=document.getElementById("name").value||"Candidate";
- doc.setFontSize(26);
- doc.text(name,400,170,{align:"center"});
-
- doc.setFontSize(18);
- doc.text("has successfully completed the NeuroType Cognitive Typing Assessment",400,230,{align:"center"});
+ doc.setFontSize(24);
+ doc.text(name,400,200,{align:"center"});
 
  doc.setFontSize(16);
- doc.text("Certificate ID: "+certID,400,280,{align:"center"});
-
- doc.setFontSize(14);
- doc.text("Issued on: "+new Date().toDateString(),400,520,{align:"center"});
+ doc.text("Certificate ID: "+certID,400,260,{align:"center"});
+ doc.text("Issued on: "+new Date().toDateString(),400,310,{align:"center"});
 
  doc.save("NeuroType_Certificate.pdf");
-}
-
-// -------- CERTIFICATE VERIFICATION --------
-async function verifyCertificate(){
-    const certInput = document.getElementById("verifyID").value.trim();
-    const resultDiv = document.getElementById("verifyResult");
-
-    if(certInput === ""){
-        resultDiv.innerHTML = "<span style='color:orange'>Please enter a Certificate ID.</span>";
-        return;
-    }
-
-    try {
-        const snapshot = await db.collection("certificates")
-                                 .where("certID","==",certInput)
-                                 .get();
-        if(snapshot.empty){
-            resultDiv.innerHTML = "<span style='color:red'>❌ Invalid Certificate ID</span>";
-        } else {
-            snapshot.forEach(doc=>{
-                const data = doc.data();
-                resultDiv.innerHTML = `<span style='color:green'>✅ Valid Certificate</span><br>
-                                       Name: ${data.name}<br>
-                                       Brain Score: ${data.brain}<br>
-                                       Issued On: ${data.issuedOn.toDate().toDateString()}`;
-            });
-        }
-    } catch(err){
-        console.error("Error verifying certificate:", err);
-        resultDiv.innerHTML = "<span style='color:red'>Error verifying certificate. Check console.</span>";
-    }
 }
 </script>
 </body>
