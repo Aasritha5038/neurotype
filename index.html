@@ -22,7 +22,7 @@ body{
 .container{
   max-width:900px;
   width:95%;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.12);
   padding:30px;
   border-radius:16px;
 }
@@ -51,6 +51,7 @@ button{
   cursor:pointer;
 }
 button:hover{background:#ffb300;}
+#result{font-size:16px;line-height:1.6;}
 </style>
 </head>
 
@@ -80,136 +81,116 @@ button:hover{background:#ffb300;}
 </div>
 
 <script>
-/* ---------------- Paragraph ---------------- */
-const paragraph =[
-`Typing is not merely a mechanical activity but a complex interaction between cognitive processing, motor coordination, and focused attention. When an individual types continuously under a timed environment, the brain must coordinate thoughts, language formulation, and precise hand movements simultaneously. This strengthens neural pathways responsible for concentration, memory retention, and decision-making. Extended typing challenges improve mental stamina and sharpen problem-solving skills. Continuous practice can lead to better multitasking and faster cognitive responses in real-life tasks.`,
-
-`The human brain adapts rapidly when exposed to structured challenges that require sustained attention and mental endurance. Typing long passages engages working memory, comprehension, and fine motor skills simultaneously, creating a synergy between mind and body. The cognitive effort reinforces neural circuits responsible for language processing, planning, and coordination. Over time, individuals notice improved concentration and focus in daily activities. This mental engagement makes typing exercises a valuable tool for cognitive growth and mental resilience.`,
-
-`Focused typing activates multiple regions of the brain simultaneously, including areas responsible for language, memory, and motor control. As thoughts translate into written words, the brain organizes ideas into structured output, maintaining clarity and coherence. Continuous practice enhances neuroplasticity, allowing the brain to adapt more efficiently to complex cognitive tasks. Typing under time constraints further challenges emotional regulation and stress management. The cumulative effect of such exercises improves overall cognitive speed and mental agility.`,
-
-`Typing under time pressure reveals an individual’s ability to manage stress while maintaining accuracy and clarity. The brain must process language, retrieve relevant vocabulary, and coordinate rapid finger movements simultaneously. Such exercises test mental endurance, attentional control, and cognitive flexibility. Individuals who practice consistently demonstrate improved focus, higher processing speed, and better working memory. By challenging the mind in structured ways, typing becomes a tool for sharpening mental performance across multiple domains.`,
-
-`Mental focus is foundational to effective performance in any cognitively demanding task. Typing extended text requires continuous attention, memory retention, and precise execution. Each keystroke reflects the brain’s rapid decision-making process and the seamless interaction between motor and cognitive functions. Practicing such exercises strengthens neural connections, improves concentration, and enhances learning abilities. Over time, individuals notice greater confidence, reduced errors, and faster mental processing in both typing and analytical tasks.`,
-
-`The coordination between mind and body becomes evident during long typing exercises, where each keystroke represents a split-second decision processed by the brain. This process engages working memory, attention, and linguistic reasoning simultaneously. Regular practice promotes neuroplasticity and enhances the ability to handle prolonged cognitive tasks without fatigue. By challenging the mind, typing helps develop focus, endurance, and mental resilience. Such exercises can be valuable tools for professional growth and personal development.`,
-
-`Typing performance reflects the brain’s efficiency in organizing, planning, and executing information. During continuous typing, the brain balances multiple cognitive processes, including memory, language formulation, and error correction. Extended practice fosters attention to detail, mental agility, and the ability to multitask efficiently. Individuals often experience improvements in cognitive clarity and reaction speed over time. Typing exercises also provide measurable feedback, helping users track progress and set higher mental goals.`,
-
-`Extended typing requires continuous loops of comprehension, memory retrieval, and motor execution. The brain constantly predicts upcoming words, monitors accuracy, and adjusts finger movements in real-time. Such activities enhance working memory, language fluency, and cognitive flexibility. Typing exercises also help regulate stress levels and improve mental endurance under challenging conditions. Overall, this practice strengthens focus, sharpens decision-making, and builds reliable cognitive pathways for complex tasks.`,
-
-`Typing long passages reveals the brain’s capacity to handle sustained cognitive load efficiently. Each word typed engages linguistic reasoning, short-term memory, and precise motor control. The interaction between attention, memory, and motor coordination develops faster information processing and better multitasking ability. Practicing consistently increases both speed and accuracy, reflecting improved mental efficiency. Typing also serves as a practical tool to enhance productivity and strengthen overall cognitive function in everyday activities.`,
-
-`Typing assessments provide insight into cognitive focus, mental endurance, and processing speed. Individuals learn to balance accuracy with speed while maintaining clarity under time pressure. Regular practice engages multiple areas of the brain, enhancing neuroplasticity and mental flexibility. The ability to sustain attention during prolonged typing tasks reflects strong concentration and memory performance. Overall, typing exercises cultivate better decision-making, faster mental responses, and a measurable increase in cognitive performance over time.`
-];
-const para = paragraphs[Math.floor(Math.random()*paragraphs.length)];
+/* ---------------- PARAGRAPH ---------------- */
+const paragraph =
+"Typing under focused conditions strengthens cognitive coordination, memory retention, and attention control. This assessment evaluates typing speed, accuracy, and mental endurance under time constraints.";
 
 document.getElementById("paragraph").innerText = paragraph;
 
 /* ---------------- TIMER ---------------- */
-let time=120, started=false, timer;
-const typing=document.getElementById("typing");
+let time = 120;
+let started = false;
+let timer;
 
-typing.addEventListener("focus",()=>{
- if(!started){
-   started=true;
-   timer=setInterval(()=>{
-     time--;
-     document.getElementById("time").innerText=time;
-     if(time<=0) finish();
-   },1000);
- }
+const typing = document.getElementById("typing");
+
+typing.addEventListener("focus", ()=>{
+  if(!started){
+    started = true;
+    timer = setInterval(()=>{
+      time--;
+      document.getElementById("time").innerText = time;
+      if(time <= 0) finish();
+    },1000);
+  }
 });
 
-/* ---------------- RESULTS ---------------- */
+/* ---------------- RESULT DATA ---------------- */
 let wpm=0, accuracy=0, brain=0, grade="", certID="";
 
 function generateCertID(){
- return "NT-"+new Date().getFullYear()+"-"+Math.floor(100000+Math.random()*900000);
+  return "NT-" + new Date().getFullYear() + "-" + Math.floor(100000 + Math.random()*900000);
 }
 
+/* ---------------- FINISH ---------------- */
 function finish(){
- clearInterval(timer);
- typing.disabled=true;
+  clearInterval(timer);
+  typing.disabled = true;
 
- const typed=typing.value.trim();
- const name=document.getElementById("name").value || "Candidate";
+  const typed = typing.value.trim();
+  const name = document.getElementById("name").value || "Candidate";
 
- const totalWords=paragraph.split(" ").length;
- const typedWords=typed.split(" ").length;
+  const totalWords = paragraph.split(" ").length;
+  const typedWords = typed.length ? typed.split(" ").length : 0;
 
- accuracy=Math.min(100,Math.round((typedWords/totalWords)*100));
- wpm=Math.round((typedWords/(120-time))*60);
- brain=Math.round((accuracy+wpm)/2);
+  accuracy = Math.min(100, Math.round((typedWords / totalWords) * 100));
+  const timeSpent = Math.max(1, 120 - time);
+  wpm = Math.round((typedWords / timeSpent) * 60);
+  brain = Math.round((accuracy + wpm) / 2);
 
- grade="Good";
- if(brain>85) grade="Excellent";
- else if(brain>70) grade="Very Good";
+  grade = "Good";
+  if(brain > 85) grade = "Excellent";
+  else if(brain > 70) grade = "Very Good";
 
- certID=generateCertID();
+  certID = generateCertID();
 
- document.getElementById("result").innerHTML=`
- Name: <b>${name}</b><br>
- Speed: <b>${wpm} WPM</b><br>
- Accuracy: <b>${accuracy}%</b><br>
- Brain Score: <b>${brain}</b><br>
- Grade: <b>${grade}</b><br>
- Certificate ID: <b>${certID}</b>
- `;
+  document.getElementById("result").innerHTML = `
+  <b>Name:</b> ${name}<br>
+  <b>Typing Speed:</b> ${wpm} WPM<br>
+  <b>Accuracy:</b> ${accuracy}%<br>
+  <b>Brain Score:</b> ${brain}<br>
+  <b>Grade:</b> ${grade}<br>
+  <b>Certificate ID:</b> ${certID}
+  `;
 
- document.getElementById("cert").style.display="block";
+  document.getElementById("cert").style.display = "block";
 }
 
 /* ---------------- PDF CERTIFICATE ---------------- */
 function downloadPDF(){
- const {jsPDF}=window.jspdf;
- const doc=new jsPDF("landscape","px",[900,600]);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("landscape","px",[900,600]);
 
- /* Background */
- doc.setFillColor(245,247,255);
- doc.rect(0,0,900,600,"F");
+  /* Background */
+  doc.setFillColor(245,247,255);
+  doc.rect(0,0,900,600,"F");
 
- /* Outer Border */
- doc.setDrawColor(30,60,114);
- doc.setLineWidth(6);
- doc.rect(20,20,860,560);
+  /* Borders */
+  doc.setDrawColor(30,60,114);
+  doc.setLineWidth(6);
+  doc.rect(20,20,860,560);
+  doc.setLineWidth(2);
+  doc.rect(40,40,820,520);
 
- /* Inner Border */
- doc.setLineWidth(2);
- doc.rect(40,40,820,520);
+  /* Header */
+  doc.setFontSize(32);
+  doc.text("CERTIFICATE OF COGNITIVE TYPING",450,120,{align:"center"});
 
- /* Logo (RIGHT SIDE) */
- doc.addImage("logo.png","PNG",640,80,180,120);
+  /* Name */
+  const name = document.getElementById("name").value || "Candidate";
+  doc.setFontSize(26);
+  doc.text(name,450,190,{align:"center"});
 
- /* Title */
- doc.setFontSize(32);
- doc.text("CERTIFICATE OF ACHIEVEMENT",450,140,{align:"center"});
+  doc.setFontSize(18);
+  doc.text("has successfully completed the NeuroType Assessment",450,225,{align:"center"});
 
- /* Name */
- const name=document.getElementById("name").value || "Candidate";
- doc.setFontSize(26);
- doc.text(name,450,200,{align:"center"});
+  /* Results */
+  doc.setFontSize(17);
+  doc.text(`Typing Speed : ${wpm} WPM`,450,280,{align:"center"});
+  doc.text(`Accuracy : ${accuracy}%`,450,310,{align:"center"});
+  doc.text(`Brain Score : ${brain}`,450,340,{align:"center"});
+  doc.text(`Grade : ${grade}`,450,370,{align:"center"});
 
- doc.setFontSize(18);
- doc.text("has successfully completed the Cognitive Typing Assessment",450,235,{align:"center"});
+  /* Footer */
+  doc.setFontSize(14);
+  doc.text(`Certificate ID: ${certID}`,60,520);
+  doc.text(`Issued on: ${new Date().toDateString()}`,450,520,{align:"center"});
 
- /* Results */
- doc.setFontSize(17);
- doc.text(`Typing Speed : ${wpm} WPM`,450,290,{align:"center"});
- doc.text(`Accuracy : ${accuracy}%`,450,320,{align:"center"});
- doc.text(`Brain Score : ${brain}`,450,350,{align:"center"});
- doc.text(`Grade : ${grade}`,450,380,{align:"center"});
+  /* Signature (text-based – NO IMAGE ERROR) */
+  doc.setFontSize(16);
+  doc.text("Authorized Signature",700,480);
 
- /* Footer */
- doc.setFontSize(14);
- doc.text(`Certificate ID: ${certID}`,60,520);
- doc.text(`Issued on: ${new Date().toDateString()}`,450,520,{align:"center"});
-
- /* Signature */
- doc.addImage("signature.png","PNG",650,440,160,60);
- doc.text("Authorized Signature",730,515,{align:"center"});
-
- doc.save("NeuroType_Certificate.pdf");
+  doc.save("NeuroType_Certificate.pdf");
 }
 </script>
 
