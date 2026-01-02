@@ -68,7 +68,7 @@ footer{text-align:center;opacity:.7;margin-top:10px;}
 <h1>NeuroType</h1>
 <div class="sub">Advanced Brain & Typing Focus Assessment</div>
 
-<input id="name" placeholder="Enter your full name (for certificate)">
+<input id="name" placeholder="Enter your full name">
 
 <div class="card">
 <b>Typing Paragraph:</b>
@@ -84,134 +84,110 @@ footer{text-align:center;opacity:.7;margin-top:10px;}
 <div class="card" id="result">Results will appear here.</div>
 
 <div class="card" id="cert" style="display:none;text-align:center;">
-<button onclick="downloadPDF()">Download Professional Certificate</button>
+<button onclick="downloadPDF()">Download Certificate</button>
 </div>
 
 <footer>© 2026 NeuroType Cognitive Systems</footer>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCrnR3QCl9LGqF2Kg5Gwonq549bBhd5jEU",
-  authDomain: "neurotype-548f1.firebaseapp.com",
-  projectId: "neurotype-548f1",
-  storageBucket: "neurotype-548f1.appspot.com",
-  messagingSenderId: "1082425793782",
-  appId: "1:1082425793782:web:3fb0aff5ed6570920520d7"
-};
+/* ---------- PARAGRAPHS ---------- */
+const paragraphs = [
+"Typing is not merely a mechanical activity but a powerful cognitive exercise that strengthens focus and coordination. The brain processes language, memory, and motor skills simultaneously during typing. Continuous typing enhances attention span and mental endurance over time. Such activities improve problem-solving ability and clarity of thought. Regular practice leads to faster cognitive responses in daily tasks.",
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-</script>
+"Focused typing requires sustained attention and precise execution under time pressure. The brain actively coordinates thoughts with finger movements to maintain accuracy. This engagement strengthens neural connections related to memory and concentration. Over time, typing exercises enhance mental resilience and discipline. Such practice supports better performance in academic and professional tasks.",
 
-<script>
-// -------- PARAGRAPHS --------
-const paragraphs=[
-`Typing is not merely a mechanical activity but a complex interaction between cognitive processing, motor coordination, and focused attention. When an individual types continuously under a timed environment, the brain must coordinate thoughts, language formulation, and precise hand movements simultaneously. This strengthens neural pathways responsible for concentration, memory retention, and decision-making. Extended typing challenges improve mental stamina and sharpen problem-solving skills. Continuous practice can lead to better multitasking and faster cognitive responses in real-life tasks.`,
+"Typing long passages challenges the brain to maintain consistency and accuracy simultaneously. The mind retrieves language patterns while monitoring errors in real time. This process improves cognitive flexibility and mental stamina. Repeated practice enhances speed without compromising precision. Typing thus becomes a valuable tool for mental development.",
 
-`The human brain adapts rapidly when exposed to structured challenges that require sustained attention and mental endurance. Typing long passages engages working memory, comprehension, and fine motor skills simultaneously, creating a synergy between mind and body. The cognitive effort reinforces neural circuits responsible for language processing, planning, and coordination. Over time, individuals notice improved concentration and focus in daily activities. This mental engagement makes typing exercises a valuable tool for cognitive growth and mental resilience.`,
+"Extended typing tasks activate multiple regions of the brain responsible for reasoning and coordination. The brain predicts upcoming words while managing stress levels. Such exercises build endurance and focus under pressure. Over time, individuals notice improved clarity and reduced cognitive fatigue. This reflects stronger neural efficiency.",
 
-`Focused typing activates multiple regions of the brain simultaneously, including areas responsible for language, memory, and motor control. As thoughts translate into written words, the brain organizes ideas into structured output, maintaining clarity and coherence. Continuous practice enhances neuroplasticity, allowing the brain to adapt more efficiently to complex cognitive tasks. Typing under time constraints further challenges emotional regulation and stress management. The cumulative effect of such exercises improves overall cognitive speed and mental agility.`,
-
-`Typing under time pressure reveals an individual’s ability to manage stress while maintaining accuracy and clarity. The brain must process language, retrieve relevant vocabulary, and coordinate rapid finger movements simultaneously. Such exercises test mental endurance, attentional control, and cognitive flexibility. Individuals who practice consistently demonstrate improved focus, higher processing speed, and better working memory. By challenging the mind in structured ways, typing becomes a tool for sharpening mental performance across multiple domains.`,
-
-`Mental focus is foundational to effective performance in any cognitively demanding task. Typing extended text requires continuous attention, memory retention, and precise execution. Each keystroke reflects the brain’s rapid decision-making process and the seamless interaction between motor and cognitive functions. Practicing such exercises strengthens neural connections, improves concentration, and enhances learning abilities. Over time, individuals notice greater confidence, reduced errors, and faster mental processing in both typing and analytical tasks.`,
-
-`The coordination between mind and body becomes evident during long typing exercises, where each keystroke represents a split-second decision processed by the brain. This process engages working memory, attention, and linguistic reasoning simultaneously. Regular practice promotes neuroplasticity and enhances the ability to handle prolonged cognitive tasks without fatigue. By challenging the mind, typing helps develop focus, endurance, and mental resilience. Such exercises can be valuable tools for professional growth and personal development.`,
-
-`Typing performance reflects the brain’s efficiency in organizing, planning, and executing information. During continuous typing, the brain balances multiple cognitive processes, including memory, language formulation, and error correction. Extended practice fosters attention to detail, mental agility, and the ability to multitask efficiently. Individuals often experience improvements in cognitive clarity and reaction speed over time. Typing exercises also provide measurable feedback, helping users track progress and set higher mental goals.`,
-
-`Extended typing requires continuous loops of comprehension, memory retrieval, and motor execution. The brain constantly predicts upcoming words, monitors accuracy, and adjusts finger movements in real-time. Such activities enhance working memory, language fluency, and cognitive flexibility. Typing exercises also help regulate stress levels and improve mental endurance under challenging conditions. Overall, this practice strengthens focus, sharpens decision-making, and builds reliable cognitive pathways for complex tasks.`,
-
-`Typing long passages reveals the brain’s capacity to handle sustained cognitive load efficiently. Each word typed engages linguistic reasoning, short-term memory, and precise motor control. The interaction between attention, memory, and motor coordination develops faster information processing and better multitasking ability. Practicing consistently increases both speed and accuracy, reflecting improved mental efficiency. Typing also serves as a practical tool to enhance productivity and strengthen overall cognitive function in everyday activities.`,
-
-`Typing assessments provide insight into cognitive focus, mental endurance, and processing speed. Individuals learn to balance accuracy with speed while maintaining clarity under time pressure. Regular practice engages multiple areas of the brain, enhancing neuroplasticity and mental flexibility. The ability to sustain attention during prolonged typing tasks reflects strong concentration and memory performance. Overall, typing exercises cultivate better decision-making, faster mental responses, and a measurable increase in cognitive performance over time.`
+"Typing assessments measure attention, memory, and processing speed effectively. Each keystroke reflects rapid decision-making by the brain. Continuous practice improves accuracy and confidence. Such tasks help regulate focus and emotional control. Typing becomes a structured method to enhance cognitive performance."
 ];
 
 const para = paragraphs[Math.floor(Math.random()*paragraphs.length)];
 document.getElementById("paragraph").innerText = para;
 
-// -------- TIMER --------
-let time=120, started=false, timer;
-const typing=document.getElementById("typing");
+/* ---------- TIMER ---------- */
+let time = 120;
+let started = false;
+let timer;
+
+const typing = document.getElementById("typing");
 typing.addEventListener("focus",()=>{
- if(!started){
-  started=true;
-  timer=setInterval(()=>{
-   time--;
-   document.getElementById("time").innerText=time;
-   if(time<=0)finish();
-  },1000);
- }
+  if(!started){
+    started = true;
+    timer = setInterval(()=>{
+      time--;
+      document.getElementById("time").innerText = time;
+      if(time <= 0) finish();
+    },1000);
+  }
 });
 
-// -------- CERT ID --------
-let certID="";
-function generateCertID(){
- return "NT-"+new Date().getFullYear()+"-"+Math.floor(100000+Math.random()*900000);
+/* ---------- RESULT VARIABLES ---------- */
+let finalWPM = 0;
+let finalAccuracy = 0;
+let finalBrain = 0;
+let finalGrade = "";
+
+/* ---------- FINISH ---------- */
+function finish(){
+  clearInterval(timer);
+  typing.disabled = true;
+
+  const typed = typing.value.trim();
+  const name = document.getElementById("name").value || "Candidate";
+
+  const paraWords = para.split(" ").length;
+  const typedWords = typed.split(" ").length;
+
+  finalAccuracy = Math.min(100, Math.round((typedWords / paraWords) * 100));
+  finalWPM = Math.round((typedWords / (120 - time)) * 60);
+  finalBrain = Math.round((finalAccuracy + finalWPM) / 2);
+
+  finalGrade = "Average";
+  if(finalBrain > 85) finalGrade = "Excellent";
+  else if(finalBrain > 70) finalGrade = "Very Good";
+  else if(finalBrain > 55) finalGrade = "Good";
+
+  document.getElementById("result").innerHTML = `
+    Name: <b>${name}</b><br>
+    Speed: <b>${finalWPM} WPM</b><br>
+    Accuracy: <b>${finalAccuracy}%</b><br>
+    Brain Score: <b>${finalBrain}</b><br>
+    Grade: <b>${finalGrade}</b>
+  `;
+
+  document.getElementById("cert").style.display = "block";
 }
 
-// -------- FINISH --------
-async function finish(){
- clearInterval(timer);
- typing.disabled=true;
-
- const typed=typing.value.trim();
- const nameInput=document.getElementById("name").value||"Candidate";
-
- const paraWords=para.split(" ").length;
- const typedWords=typed.split(" ").length;
-
- const accuracy=Math.min(100,Math.round((typedWords/paraWords)*100));
- const wpm=Math.round((typedWords/(120-time))*60);
- const brain=Math.round((accuracy+wpm)/2);
-
- let grade="Average";
- if(brain>85)grade="Excellent";
- else if(brain>70)grade="Very Good";
- else if(brain>55)grade="Good";
-
- certID = generateCertID();
-
- document.getElementById("result").innerHTML=
- `Name: <b>${nameInput}</b><br>
- Speed: <b>${wpm} WPM</b><br>
- Accuracy: <b>${accuracy}%</b><br>
- Brain Score: <b>${brain}</b><br>
- Grade: <b>${grade}</b><br>
- Certificate ID: <b>${certID}</b>`;
-
- document.getElementById("cert").style.display="block";
-
- await db.collection("certificates").add({
-   certID: certID,
-   name: nameInput,
-   brain: brain,
-   issuedOn: firebase.firestore.FieldValue.serverTimestamp()
- });
-}
-
-// -------- PDF CERTIFICATE --------
+/* ---------- PDF CERTIFICATE (WITH RESULTS) ---------- */
 function downloadPDF(){
- const {jsPDF}=window.jspdf;
- const doc=new jsPDF("landscape","px",[800,600]);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("landscape","px",[800,600]);
 
- doc.setFontSize(30);
- doc.text("CERTIFICATE OF COGNITIVE TYPING",400,120,{align:"center"});
+  const name = document.getElementById("name").value || "Candidate";
 
- const name=document.getElementById("name").value||"Candidate";
- doc.setFontSize(24);
- doc.text(name,400,200,{align:"center"});
+  doc.setFontSize(30);
+  doc.text("CERTIFICATE OF COGNITIVE TYPING",400,100,{align:"center"});
 
- doc.setFontSize(16);
- doc.text("Certificate ID: "+certID,400,260,{align:"center"});
- doc.text("Issued on: "+new Date().toDateString(),400,310,{align:"center"});
+  doc.setFontSize(24);
+  doc.text(name,400,160,{align:"center"});
 
- doc.save("NeuroType_Certificate.pdf");
+  doc.setFontSize(18);
+  doc.text("Performance Summary",400,220,{align:"center"});
+
+  doc.setFontSize(16);
+  doc.text(`Typing Speed : ${finalWPM} WPM`,400,260,{align:"center"});
+  doc.text(`Accuracy      : ${finalAccuracy}%`,400,300,{align:"center"});
+  doc.text(`Brain Score   : ${finalBrain}`,400,340,{align:"center"});
+  doc.text(`Grade         : ${finalGrade}`,400,380,{align:"center"});
+
+  doc.setFontSize(14);
+  doc.text("Issued on: " + new Date().toDateString(),400,440,{align:"center"});
+
+  doc.save("NeuroType_Certificate.pdf");
 }
 </script>
+
 </body>
 </html>
