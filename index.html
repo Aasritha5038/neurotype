@@ -177,8 +177,8 @@ function downloadPDF(){
  doc.text("Certificate ID: "+certID,400,260,{align:"center"});
  doc.text("Issued on: "+new Date().toDateString(),400,300,{align:"center"});
 
- doc.text("Authorized Signature",120,500);
- doc.text("NeuroType System",600,500);
+ doc.text("Neuro Type System",120,500);
+ doc.text("Candidate's Signature",600,500);
 
  doc.save("NeuroType_Certificate.pdf");
 }
