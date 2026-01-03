@@ -172,12 +172,12 @@ function downloadPDF(){
  doc.text(name,400,150,{align:"center"});
 
  doc.setFontSize(16);
- doc.text("has successfully completed the NeuroType Assessment",400,200,{align:"center"});
+ doc.text("has successfully completed the NeuroTyping Assessment",400,200,{align:"center"});
 
  doc.text("Certificate ID: "+certID,400,260,{align:"center"});
  doc.text("Issued on: "+new Date().toDateString(),400,300,{align:"center"});
 
- doc.text("Neuro Type System",120,500);
+ doc.text("Neuro Typing System",120,500);
  doc.text("Candidate's Signature",600,500);
 
  doc.save("NeuroType_Certificate.pdf");
